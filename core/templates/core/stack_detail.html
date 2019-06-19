@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+  <h1>{{ stack.name }}</h1>
+  <ul>
+    {% for card in cards %}
+      <li>{{ card.prompt }}</li>
+    {% endfor %}
+  </ul>
+  <p>
+    <a href="{% url 'stack-list' %}">Back to all stacks</a>
+  </p>
+{% endblock %}

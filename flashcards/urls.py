@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from core import views as core_views
 
 urlpatterns = [
+    path('stacks/', core_views.stack_list, name='stack-list'),
+    path('stacks/<int:stack_pk>/', core_views.stack_detail,
+         name='stack-detail'),
     path('admin/', admin.site.urls),
 ]

@@ -6,6 +6,9 @@ from django.db import models
 class Stack(models.Model):
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 
 class Card(models.Model):
     prompt = models.TextField(
@@ -15,3 +18,6 @@ class Card(models.Model):
         verbose_name="Card answer",
         help_text="This is what you will see on the back of the card.")
     stack = models.ForeignKey(to=Stack, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.prompt
