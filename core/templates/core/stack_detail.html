@@ -1,20 +1,10 @@
 {% extends "core/base.html" %}
 
 {% block content %}
-  <h1>{{ stack.name }}</h1>
-  <ul>
-    {% for card in cards %}
-      <li>
-        <p>
-          {{ card.prompt }}
-          <a href="#answer-{{ card.pk }}">See answer</a>
-        </p>
-        <p id="answer-{{ card.pk }}" class="answer">
-          {{ card.answer }}
-        </p>
-      </li>
-    {% endfor %}
-  </ul>
+  <h1>{{ stack.name }} ({{ card_count }} card{{ card_count|pluralize }})</h1>
+  <p>
+    <a href="{% url 'stack-quiz' stack_pk=stack.pk %}">Quiz me on this card stack</a>
+  </p>
   <p>
     <a href="{% url 'card-create' stack_pk=stack.pk %}">Create new card</a>
   </p>

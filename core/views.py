@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from core.models import Stack
-from core.forms import StackForm, CardForm
+from core.models import Stack, Card
+from core.forms import StackForm, CardForm, CardResultsForm
 
 
 def stack_list(request):
@@ -27,7 +27,7 @@ def stack_detail(request, stack_pk):
     stack = get_object_or_404(Stack, pk=stack_pk)
     return render(request, 'core/stack_detail.html', {
         "stack": stack,
-        "cards": stack.card_set.all(),
+        "card_count": stack.card_set.count(),
     })
 
 
@@ -48,3 +48,36 @@ def card_create(request, stack_pk):
         "stack": stack,
         "form": form
     })
+
+
+def stack_quiz(request, stack_pk):
+    """
+    Show the user a random card from the chosen stack.
+    """
+    stack = get_object_or_404(Stack, pk=stack_pk)
+    form = CardResultsForm()
+
+    card = stack.random_card()
+    return render(request, 'core/stack_quiz.html', {
+        "stack": stack,
+        "card": card,
+        "form": form,
+    })
+
+
+def card_results(request, card_pk):
+    """
+    View to submit correct/incorrect results for a card.
+    """
+    card = get_object_or_404(Card, pk=card_pk)
+    form = CardResultsForm(request.POST)
+    if form.is_valid():
+        correct = form.cleaned_data['correct']
+        if correct:
+            card.correct_count += 1
+        else:
+            card.incorrect_count += 1
+        card.save()
+    else:
+        raise RuntimeError()
+    return redirect(to='stack-quiz', stack_pk=card.stack.pk)

@@ -17,3 +17,7 @@ class CardForm(forms.ModelForm):
             'prompt',
             'answer',
         )
+
+
+class CardResultsForm(forms.Form):
+    correct = forms.BooleanField(required=False)
