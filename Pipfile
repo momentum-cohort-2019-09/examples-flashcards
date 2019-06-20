@@ -10,7 +10,7 @@ pytest = "*"
 
 [packages]
 django = "*"
-django-debug-toolbar = "*"
+django-extensions = "*"
 
 [requires]
 python_version = "3.7"
