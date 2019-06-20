@@ -22,5 +22,8 @@ urlpatterns = [
     path('stacks/', core_views.stack_list, name='stack-list'),
     path('stacks/<int:stack_pk>/', core_views.stack_detail,
          name='stack-detail'),
+    path('stacks/<int:stack_pk>/create_card',
+         core_views.card_create,
+         name='card-create'),
     path('admin/', admin.site.urls),
 ]

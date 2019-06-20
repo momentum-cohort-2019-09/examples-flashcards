@@ -15,10 +15,7 @@
     <h2>Create a new stack</h2>
     <form action="{% url 'stack-list' %}" method="POST">
       {% csrf_token %}
-      <p>
-        <label for="stack-name">New stack name:</label>
-        <input type="text" name="stack_name" id="stack-name" required>
-      </p>
+      {{ form.as_p }}
       <p>        
         <button type="submit">Create stack</button>
       </p>
