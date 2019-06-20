@@ -6,6 +6,15 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <link rel="stylesheet" href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"/>
+  <style>
+    .answer {
+      display: none;
+    }
+
+    .answer::target {
+      display: block;
+    }
+  </style>
 </head>
 <body class="sans-serif center mv2 mw7">
   {% block content %}{% endblock %}  

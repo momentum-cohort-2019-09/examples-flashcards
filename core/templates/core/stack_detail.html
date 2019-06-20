@@ -4,7 +4,15 @@
   <h1>{{ stack.name }}</h1>
   <ul>
     {% for card in cards %}
-      <li>{{ card.prompt }}</li>
+      <li>
+        <p>
+          {{ card.prompt }}
+          <a href="#answer-{{ card.pk }}">See answer</a>
+        </p>
+        <p id="answer-{{ card.pk }}" class="answer">
+          {{ card.answer }}
+        </p>
+      </li>
     {% endfor %}
   </ul>
   <p>
