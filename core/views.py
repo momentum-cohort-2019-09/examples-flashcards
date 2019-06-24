@@ -58,7 +58,13 @@ def stack_quiz(request, stack_pk):
     stack = get_object_or_404(Stack, pk=stack_pk)
     form = CardResultsForm()
 
-    card = stack.card_set.filter(box_number=1).order_by('?').first()
+    # TODO rewrite when we learn about aggregations
+    card = None
+    box_num = 0
+    while card is None and box_num <= 3:
+        box_num += 1
+        card = stack.card_set.filter(
+            box_number=box_num).order_by('last_shown_at').first()
 
     last_shown_at = card.last_shown_at
     card.last_shown_at = timezone.now()
