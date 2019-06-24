@@ -1,16 +1,22 @@
 {% extends "core/base.html" %}
 
 {% block content %}
-  <h1>Card stacks</h1>
-  <ul>
+  <h1 class="f2">Card stacks</h1>
+  <div class="flex flex-wrap">
     {% for stack in stacks %}
-      <li>
-        <a href="{% url 'stack-detail' stack.pk %}">
-          {{ stack.name }}
-        </a>
-      </li>
+    <div class="w-25-l w-50">
+      <div class="ba br3 b--mid-gray pa3 ma3 tc">
+        <h2 class="f3 mt0 mb2">
+          <a href="{% url 'stack-detail' stack.pk %}">
+            {{ stack.name }}
+          </a>
+        </h2>
+        <div>{{ stack.card_set.count }} card{{ stack.card_set.count|pluralize }}</div>
+      </div>
+    </div>
     {% endfor %}
-  </ul>
+  </div>
+
   <section>
     <h2>Create a new stack</h2>
     <form action="{% url 'stack-list' %}" method="POST">

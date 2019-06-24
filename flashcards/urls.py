@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path
+from django.views.generic import RedirectView
 from core import views as core_views
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/stacks/')),
     path('stacks/', core_views.stack_list, name='stack-list'),
     path('stacks/<int:stack_pk>/', core_views.stack_detail,
          name='stack-detail'),
