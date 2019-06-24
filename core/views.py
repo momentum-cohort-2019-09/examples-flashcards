@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from core.models import Stack, Card
 from core.forms import StackForm, CardForm, CardResultsForm
+from django.utils import timezone
 
 
 def stack_list(request):
@@ -57,11 +58,16 @@ def stack_quiz(request, stack_pk):
     stack = get_object_or_404(Stack, pk=stack_pk)
     form = CardResultsForm()
 
-    card = stack.random_card()
+    card = stack.card_set.filter(box_number=1).order_by('?').first()
+
+    last_shown_at = card.last_shown_at
+    card.last_shown_at = timezone.now()
+    card.save()
     return render(request, 'core/stack_quiz.html', {
         "stack": stack,
         "card": card,
         "form": form,
+        "last_shown_at": last_shown_at,
     })
 
 
@@ -73,11 +79,7 @@ def card_results(request, card_pk):
     form = CardResultsForm(request.POST)
     if form.is_valid():
         correct = form.cleaned_data['correct']
-        if correct:
-            card.correct_count += 1
-        else:
-            card.incorrect_count += 1
-        card.save()
+        card.record_result(correct)
     else:
         raise RuntimeError()
     return redirect(to='stack-quiz', stack_pk=card.stack.pk)

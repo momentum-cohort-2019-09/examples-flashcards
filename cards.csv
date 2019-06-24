@@ -1,0 +1,9 @@
+prompt,answer
+"What is the difference between using `a_dict[key]` and `a_dict.get(key)`?","`.get()` will return `None` instead of throwing an error if the key doesn't exist."
+"What is a set?","An unordered collection of unique elements."
+"What is a list?","An ordered collection of elements, mutable."
+"What is a tuple?","An ordered collection of elements, immutable."
+"What is a dictionary?","A collection of key-value pairs."
+"What module contains different specialized types of collections?","`collections`"
+"What does the function `random.random()` return?","A random number between 0 and 1."
+"If `a_list` equals `['a', 'b', 'c', 'd']`, what does `a_list[-2]` equal?","`'c'`"

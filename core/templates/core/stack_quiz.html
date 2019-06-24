@@ -14,7 +14,7 @@
             <input type="hidden" name="{{ form.correct.html_name }}" value="True">
             <button class="f6 link dim br3 ph3 pv2 mb2 dib white bg-dark-green">I got it right</button>
           </form>
-
+          
           <form action="{% url 'card-results' card_pk=card.pk %}" method="POST">
             {% csrf_token %}
             <input type="hidden" name="{{ form.correct.html_name }}" value="False">
@@ -24,8 +24,9 @@
       </div>
     </div>
     <p>
-      Correct guesses: {{ card.correct_count }}<br>
-      Incorrect guesses: {{ card.incorrect_count }}
+      Correct guesses: {{ card.times_correct }}<br>
+      Incorrect guesses: {{ card.times_incorrect }}<br>
+      Last shown at: {% if last_shown_at %}{{ last_shown_at }}{% else %}Never{% endif %}
     </p>
   </section>
 {% endblock %}
