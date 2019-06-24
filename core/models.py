@@ -22,8 +22,6 @@ class Card(models.Model):
         verbose_name="Card answer",
         help_text="This is what you will see on the back of the card.")
     stack = models.ForeignKey(to=Stack, on_delete=models.CASCADE)
-    times_correct = models.PositiveIntegerField(default=0)
-    times_incorrect = models.PositiveIntegerField(default=0)
     box_number = models.PositiveIntegerField(default=1)
     last_shown_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -32,12 +30,28 @@ class Card(models.Model):
     def __str__(self):
         return self.prompt
 
+    def times_correct(self):
+        return self.answer_records.filter(correct=True).count()
+
+    def times_incorrect(self):
+        return self.answer_records.filter(correct=False).count()
+
     def record_result(self, correct):
+        self.answer_records.create(correct=correct)
         if correct:
-            self.times_correct += 1
             self.box_number = min([MAX_BOX_NUMBER, self.box_number + 1])
         else:
-            self.times_incorrect += 1
             self.box_number = MIN_BOX_NUMBER
         self.save()
         return self
+
+
+class AnswerRecord(models.Model):
+    """
+    Record of whether the user answered the card correctly or incorrectly.
+    """
+    card = models.ForeignKey(to=Card,
+                             on_delete=models.CASCADE,
+                             related_name='answer_records')
+    correct = models.BooleanField()
+    answered_at = models.DateTimeField(auto_now_add=True)
