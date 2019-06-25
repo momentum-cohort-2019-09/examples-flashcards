@@ -1,4 +1,4 @@
-{% extends "core/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
   <h2>Quiz: {{ stack.name }}</h2>
@@ -22,10 +22,12 @@
           </form>
         </div>
       </div>
-    </div>
+    </div>    
     <p>
-      Correct guesses: {{ card.times_correct }}<br>
-      Incorrect guesses: {{ card.times_incorrect }}<br>
+      {% if user.is_authenticated %}
+      Correct guesses: {{ times_correct }}<br>
+      Incorrect guesses: {{ times_incorrect }}<br>
+      {% endif %}
       Last shown at: {% if last_shown_at %}{{ last_shown_at }}{% else %}Never{% endif %}
     </p>
   </section>

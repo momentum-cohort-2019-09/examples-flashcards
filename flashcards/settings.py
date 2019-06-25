@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'registration',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -125,3 +126,8 @@ INTERNAL_IPS = ['127.0.0.1']
 
 USE_TZ = True
 TIME_ZONE = 'America/New_York'
+
+# Registration settings
+
+LOGIN_REDIRECT_URL = '/stacks/'
+ACCOUNT_ACTIVATION_DAYS = 7

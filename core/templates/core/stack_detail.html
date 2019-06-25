@@ -1,13 +1,15 @@
-{% extends "core/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
   <h1>{{ stack.name }} ({{ card_count }} card{{ card_count|pluralize }})</h1>
   <p>
     <a href="{% url 'stack-quiz' stack_pk=stack.pk %}">Quiz me on this card stack</a>
   </p>
+  {% if user.is_authenticated and stack.owner == user %}
   <p>
     <a href="{% url 'card-create' stack_pk=stack.pk %}">Create new card</a>
   </p>
+  {% endif %}
   <p>
     <a href="{% url 'stack-list' %}">Back to all stacks</a>
   </p>

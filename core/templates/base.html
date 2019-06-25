@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Flashcards</title>
+  {% block meta %}{% endblock %}
+  <title>{% block title %}Flashcards{% endblock %}</title>
   <link rel="stylesheet" href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"/>
   <style>
     .answer {
@@ -23,7 +24,10 @@
     </h1>
     <div>
       {% if request.user.is_authenticated %}
-      Logged in as {{ request.user }}
+      Logged in as {{ request.user }} | <a href="{% url 'auth_logout' %}">Logout</a>
+      {% else %}
+      <a href="{% url 'auth_login' %}">Login</a> |
+      <a href="{% url 'registration_register' %}">Register</a>
       {% endif %}
     </div>
   </header>

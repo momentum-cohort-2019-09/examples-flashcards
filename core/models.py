@@ -36,14 +36,23 @@ class Card(models.Model):
     def __str__(self):
         return self.prompt
 
-    def times_correct(self):
-        return self.answer_records.filter(correct=True).count()
+    def times_correct(self, user):
+        if not user.is_authenticated:
+            return None
+        return self.answer_records.filter(user=user, correct=True).count()
 
-    def times_incorrect(self):
-        return self.answer_records.filter(correct=False).count()
+    def times_incorrect(self, user):
+        if not user.is_authenticated:
+            return None
+        return self.answer_records.filter(user=user, correct=False).count()
 
-    def record_result(self, correct):
-        self.answer_records.create(correct=correct)
+    def record_result(self, correct, user):
+        if user.is_authenticated:
+            self.answer_records.create(correct=correct, user=user)
+        else:
+            self.answer_records.create(correct=correct)
+
+        # TODO this will not work now that we have multiple users
         if correct:
             self.box_number = min([MAX_BOX_NUMBER, self.box_number + 1])
         else:

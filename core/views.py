@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from core.models import Stack, Card
 from core.forms import StackForm, CardForm, CardResultsForm
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 
 def stack_list(request):
@@ -45,8 +47,12 @@ def stack_detail(request, stack_pk):
     })
 
 
+@login_required
 def card_create(request, stack_pk):
     stack = get_object_or_404(Stack, pk=stack_pk)
+
+    if stack.owner != request.user:
+        return HttpResponseForbidden()
 
     if request.method == "POST":
         form = CardForm(data=request.POST)
@@ -82,12 +88,15 @@ def stack_quiz(request, stack_pk):
     last_shown_at = card.last_shown_at
     card.last_shown_at = timezone.now()
     card.save()
-    return render(request, 'core/stack_quiz.html', {
-        "stack": stack,
-        "card": card,
-        "form": form,
-        "last_shown_at": last_shown_at,
-    })
+    return render(
+        request, 'core/stack_quiz.html', {
+            "stack": stack,
+            "card": card,
+            "form": form,
+            "times_correct": card.times_correct(request.user),
+            "times_incorrect": card.times_incorrect(request.user),
+            "last_shown_at": last_shown_at,
+        })
 
 
 def card_results(request, card_pk):
@@ -98,7 +107,7 @@ def card_results(request, card_pk):
     form = CardResultsForm(request.POST)
     if form.is_valid():
         correct = form.cleaned_data['correct']
-        card.record_result(correct)
+        card.record_result(correct, request.user)
     else:
         raise RuntimeError()
     return redirect(to='stack-quiz', stack_pk=card.stack.pk)
