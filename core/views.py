@@ -5,17 +5,30 @@ from django.utils import timezone
 
 
 def stack_list(request):
-    if request.method == "POST":
+    """
+    On GET - show all stacks.
+    On POST - create a new stack.
+    """
+    if request.method == "POST" and request.user.is_authenticated:
         form = StackForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            stack = form.save(commit=False)
+            stack.owner = request.user
+            stack.save()
             return redirect(to='stack-list')
     else:
         form = StackForm()
 
-    stacks = Stack.objects.all()
+    if request.user.is_authenticated:
+        my_stacks = Stack.objects.filter(owner=request.user)
+        other_stacks = Stack.objects.exclude(owner=request.user)
+    else:
+        my_stacks = []
+        other_stacks = Stack.objects.all()
+
     return render(request, 'core/stack_list.html', {
-        "stacks": stacks,
+        "my_stacks": my_stacks,
+        "other_stacks": other_stacks,
         "form": form
     })
 

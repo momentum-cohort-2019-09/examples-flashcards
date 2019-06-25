@@ -17,10 +17,15 @@
   </style>
 </head>
 <body class="sans-serif center mv2 mw8">
-  <header class="mt4 pv2 ph4 bg-yellow">
+  <header class="mt4 pv2 ph4 bg-yellow flex items-center justify-between">
     <h1 class="f2">
       <a class="mid-gray" href="/">Flashcards</a>
     </h1>
+    <div>
+      {% if request.user.is_authenticated %}
+      Logged in as {{ request.user }}
+      {% endif %}
+    </div>
   </header>
   <main class="pv2 ph4">
     {% block content %}{% endblock %}  

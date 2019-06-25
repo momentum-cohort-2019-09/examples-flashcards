@@ -1,9 +1,35 @@
 {% extends "core/base.html" %}
 
 {% block content %}
-  <h1 class="f2">Card stacks</h1>
+  {% if user.is_authenticated %}
+  <h2 class="f2">My stacks</h2>
   <div class="flex flex-wrap">
-    {% for stack in stacks %}
+    {% for stack in my_stacks %}
+    <div class="w-25-l w-50">
+      <div class="ba br3 b--mid-gray pa3 ma3 tc">
+        <h2 class="f3 mt0 mb2">
+          <a href="{% url 'stack-detail' stack.pk %}">
+            {{ stack.name }}
+          </a>
+        </h2>
+        <div>{{ stack.card_set.count }} card{{ stack.card_set.count|pluralize }}</div>
+      </div>
+    </div>
+    {% empty %}
+    <p>You haven't created any stacks yet. <a href="#create-stack">Create your first one.</a></p>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <h2 class="f2">
+    {% if user.is_authenticated %}
+    Other stacks
+    {% else %}
+    Stacks
+    {% endif %}
+  </h2>
+  <div class="flex flex-wrap">
+    {% for stack in other_stacks %}
     <div class="w-25-l w-50">
       <div class="ba br3 b--mid-gray pa3 ma3 tc">
         <h2 class="f3 mt0 mb2">
@@ -17,7 +43,8 @@
     {% endfor %}
   </div>
   
-  <section>
+  {% if user.is_authenticated %}
+  <section id="create-stack">
     <h2>Create a new stack</h2>
     <form action="{% url 'stack-list' %}" method="POST">
       {% csrf_token %}
@@ -28,4 +55,5 @@
 
     </form>
   </section>
+  {% endif %}
 {% endblock %}
