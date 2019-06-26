@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from core.models import Stack, Card
-from core.forms import StackForm, CardForm, CardResultsForm
+from core.forms import CardForm, CardResultsForm, StackForm
+from core.models import Card, Stack
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
 
 def stack_list(request):
@@ -14,6 +17,8 @@ def stack_list(request):
             stack = form.save(commit=False)
             stack.owner = request.user
             stack.save()
+            messages.success(
+                request, f"Your stack '{stack.name}' was created successfully.")
             return redirect(to='stack-list')
     else:
         form = StackForm()
@@ -44,8 +49,39 @@ def stack_detail(request, stack_pk):
     })
 
 
+@login_required
+def stack_all_cards(request, stack_pk):
+    stack = get_object_or_404(Stack, pk=stack_pk)
+
+    valid_sorts = ['prompt', 'answer', 'created_at']
+
+    if stack.owner != request.user:
+        messages.warning(
+            request,
+            "You tried to look at all cards for a stack that you do not own.")
+        return redirect('stack-detail', stack_pk=stack.pk)
+
+    sort = request.GET.get('sort', default='prompt')
+    if sort not in valid_sorts:
+        sort = 'prompt'
+    cards = stack.card_set.order_by(sort)
+
+    return render(request, 'core/stack_all_cards.html', {
+        "stack": stack,
+        "cards": cards,
+        "sort": sort,
+        "valid_sorts": valid_sorts,
+    })
+
+
+@login_required
 def card_create(request, stack_pk):
     stack = get_object_or_404(Stack, pk=stack_pk)
+
+    if stack.owner != request.user:
+        messages.warning(
+            request, "You tried to add a card to a stack that you do not own.")
+        return redirect('stack-detail', stack_pk=stack.pk)
 
     if request.method == "POST":
         form = CardForm(data=request.POST)
@@ -53,6 +89,7 @@ def card_create(request, stack_pk):
             card = form.save(commit=False)
             card.stack = stack
             card.save()
+            messages.success(request, "Your card was created successfully.")
             return redirect('stack-detail', stack_pk=stack.pk)
     else:
         form = CardForm()
@@ -95,6 +132,9 @@ def card_results(request, card_pk):
     View to submit correct/incorrect results for a card.
     """
     card = get_object_or_404(Card, pk=card_pk)
+    if not request.user.is_authenticated:
+        return redirect(to='stack-quiz', stack_pk=card.stack.pk)
+
     form = CardResultsForm(request.POST)
     if form.is_valid():
         correct = form.cleaned_data['correct']

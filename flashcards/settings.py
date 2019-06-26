@@ -131,3 +131,14 @@ TIME_ZONE = 'America/New_York'
 
 LOGIN_REDIRECT_URL = '/stacks/'
 ACCOUNT_ACTIVATION_DAYS = 7
+
+# Messages
+from django.contrib.messages import constants as message_constants
+
+MESSAGE_TAGS = {
+    message_constants.INFO: '',
+    message_constants.SUCCESS: 'tc mv3 pa4 ba bg-light-green black',
+    message_constants.WARNING: 'tc mv3 pa4 ba bg-red white',
+    message_constants.ERROR: '',
+    message_constants.DEBUG: '',
+}

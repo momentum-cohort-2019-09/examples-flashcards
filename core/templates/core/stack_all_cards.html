@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ stack.name }}</h1>
+  <p>Cards sorted by:
+    {% for sort_type in valid_sorts %}
+      {% if sort == sort_type %} 
+        <strong>{{ sort_type }}</strong>
+      {% else %}
+        <a href="?sort={{ sort_type }}">{{ sort_type }}</a>
+      {% endif %}
+    {% endfor %}    
+  </p>
+  {% for card in cards %}
+  
+  <div class="mv3 pa3 ba">
+    <p><strong>Prompt</strong>: {{ card.prompt }}</p>
+    <p><strong>Answer</strong>: {{ card.answer }}</p>
+    <p><strong>Created at</strong>: {{ card.created_at }}</p>
+    <p><strong>Times correct</strong>: {{ card.times_correct }}</p>
+    <p><strong>Times incorrect</strong>: {{ card.times_incorrect }}</p>
+  </div>
+
+  {% endfor %}
+{% endblock %}

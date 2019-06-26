@@ -30,12 +30,16 @@ class Card(models.Model):
     def __str__(self):
         return self.prompt
 
-    def times_correct(self, user):
+    def times_correct(self, user=None):
+        if user is None:
+            return self.answer_records.filter(correct=True).count()
         if not user.is_authenticated:
             return None
         return self.answer_records.filter(user=user, correct=True).count()
 
-    def times_incorrect(self, user):
+    def times_incorrect(self, user=None):
+        if user is None:
+            return self.answer_records.filter(correct=False).count()
         if not user.is_authenticated:
             return None
         return self.answer_records.filter(user=user, correct=False).count()
