@@ -46,11 +46,6 @@ class Card(models.Model):
         else:
             self.answer_records.create(correct=correct)
 
-        # TODO this will not work now that we have multiple users
-        if correct:
-            self.box_number = min([MAX_BOX_NUMBER, self.box_number + 1])
-        else:
-            self.box_number = MIN_BOX_NUMBER
         self.save()
         return self
 
