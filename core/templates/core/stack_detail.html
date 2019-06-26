@@ -5,7 +5,7 @@
   <p>
     <a href="{% url 'stack-quiz' stack_pk=stack.pk %}">Quiz me on this card stack</a>
   </p>
-  {% if user.is_authenticated and stack.owner == user %}
+  {% if user.is_authenticated %}
   <p>
     <a href="{% url 'card-create' stack_pk=stack.pk %}">Create new card</a>
   </p>

@@ -1,9 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from core.models import Stack, Card
 from core.forms import StackForm, CardForm, CardResultsForm
-from django.utils import timezone
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
 
 
 def stack_list(request):
@@ -80,9 +77,6 @@ def stack_quiz(request, stack_pk):
     #     box_num += 1
     #     card = stack.card_set.filter(
     #         box_number=box_num).order_by('last_shown_at').first()
-
-    # cards = stack.card_set_for_user(request.user)
-    # card = cards.order_by('?')[0]
 
     card = stack.card_set.order_by('?').first()
 

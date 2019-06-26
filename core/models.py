@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Q, Count
 
 ## Safer, but more complex method
 # from django.contrib.auth import get_user_model
@@ -13,25 +12,8 @@ class Stack(models.Model):
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True)
 
-    # def card_set_for_user(self, user):
-    #     if not user.is_authenticated:
-    #         return self.card_set.all()
-
-    #     return self.card_set.annotate(
-    #         times_correct=Count('answer_records',
-    #                             filter=Q(answer_records__user=user,
-    #                                      answer_records__correct=True)),
-    #         times_incorrect=Count('answer_records',
-    #                               filter=Q(answer_records__user=user,
-    #                                        answer_records__correct=False)),
-    #     )
-
     def __str__(self):
         return self.name
-
-
-MIN_BOX_NUMBER = 1
-MAX_BOX_NUMBER = 3
 
 
 class Card(models.Model):
