@@ -21,7 +21,7 @@ from core import views as core_views
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/stacks/')),
-    path('stacks/', core_views.stack_list, name='stack-list'),
+    path('stacks/', core_views.StackListView.as_view(), name='stack-list'),
     path('stacks/<int:stack_pk>/', core_views.stack_detail,
          name='stack-detail'),
     path('stacks/<int:stack_pk>/create_card/',
@@ -29,7 +29,7 @@ urlpatterns = [
          name='card-create'),
     path('stacks/<int:stack_pk>/cards/',
          core_views.stack_all_cards,
-         name='stack-all-cards'),         
+         name='stack-all-cards'),
     path('stacks/<int:stack_pk>/quiz/',
          core_views.stack_quiz,
          name='stack-quiz'),
