@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>{{ stack.name }} ({{ card_count }} card{{ card_count|pluralize }})</h1>
+  <h1>{{ stack.name }} ({{ stack.card_set.count }} card{{ stack.card_set.count|pluralize }})</h1>
   <p>
     <a href="{% url 'stack-quiz' stack_pk=stack.pk %}">Quiz me on this card stack</a>
   </p>

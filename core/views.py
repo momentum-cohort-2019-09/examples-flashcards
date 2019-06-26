@@ -5,8 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
+from django.views.generic import DetailView, CreateView
+
 
 class StackListView(View):
+
     def get(self, request):
         form = StackForm()
         return self.render_template(request, form)
@@ -19,7 +22,8 @@ class StackListView(View):
                 stack.owner = request.user
                 stack.save()
                 messages.success(
-                    request, f"Your stack '{stack.name}' was created successfully.")
+                    request,
+                    f"Your stack '{stack.name}' was created successfully.")
                 return redirect(to='stack-list')
         else:
             form = StackForm()
@@ -35,23 +39,14 @@ class StackListView(View):
             other_stacks = Stack.objects.all()
 
         return render(request, 'core/stack_list.html', {
-            "whoo": "hoo",
             "my_stacks": my_stacks,
             "other_stacks": other_stacks,
             "form": form
         })
 
 
-def stack_detail(request, stack_pk):
-    """
-    View for /stacks/<stack_pk>
-    Gets a stack and display all the cards in it.
-    """
-    stack = get_object_or_404(Stack, pk=stack_pk)
-    return render(request, 'core/stack_detail.html', {
-        "stack": stack,
-        "card_count": stack.card_set.count(),
-    })
+class StackDetailView(DetailView):
+    model = Stack
 
 
 @login_required
