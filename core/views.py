@@ -47,12 +47,8 @@ def stack_detail(request, stack_pk):
     })
 
 
-@login_required
 def card_create(request, stack_pk):
     stack = get_object_or_404(Stack, pk=stack_pk)
-
-    if stack.owner != request.user:
-        return HttpResponseForbidden()
 
     if request.method == "POST":
         form = CardForm(data=request.POST)
@@ -78,16 +74,18 @@ def stack_quiz(request, stack_pk):
     form = CardResultsForm()
 
     # TODO rewrite when we learn about aggregations
-    card = None
-    box_num = 0
-    while card is None and box_num <= 3:
-        box_num += 1
-        card = stack.card_set.filter(
-            box_number=box_num).order_by('last_shown_at').first()
+    # card = None
+    # box_num = 0
+    # while card is None and box_num <= 3:
+    #     box_num += 1
+    #     card = stack.card_set.filter(
+    #         box_number=box_num).order_by('last_shown_at').first()
 
-    last_shown_at = card.last_shown_at
-    card.last_shown_at = timezone.now()
-    card.save()
+    # cards = stack.card_set_for_user(request.user)
+    # card = cards.order_by('?')[0]
+
+    card = stack.card_set.order_by('?').first()
+
     return render(
         request, 'core/stack_quiz.html', {
             "stack": stack,
@@ -95,7 +93,6 @@ def stack_quiz(request, stack_pk):
             "form": form,
             "times_correct": card.times_correct(request.user),
             "times_incorrect": card.times_incorrect(request.user),
-            "last_shown_at": last_shown_at,
         })
 
 
