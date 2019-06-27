@@ -58,9 +58,9 @@ class AnswerRecord(models.Model):
     """
     Record of whether the user answered the card correctly or incorrectly.
     """
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     card = models.ForeignKey(to=Card,
                              on_delete=models.CASCADE,
                              related_name='answer_records')
     correct = models.BooleanField()
     answered_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)

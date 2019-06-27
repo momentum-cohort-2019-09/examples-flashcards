@@ -30,5 +30,11 @@
       {% endif %}
       <!-- Last shown at: {% if last_shown_at %}{{ last_shown_at }}{% else %}Never{% endif %} -->
     </p>
+    <h3>Previous attempts</h3>
+    <ul>
+      {% for answer_record in card.answer_records.all %}
+        <li>{{ answer_record.user }}: {{ answer_record.correct }} {{ answer_record.answered_at }}</li>
+      {% endfor %}
+    </ul>
   </section>
 {% endblock %}
