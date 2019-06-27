@@ -64,3 +64,4 @@ class AnswerRecord(models.Model):
                              related_name='answer_records')
     correct = models.BooleanField()
     answered_at = models.DateTimeField(auto_now_add=True)
+
