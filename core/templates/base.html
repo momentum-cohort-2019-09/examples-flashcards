@@ -10,15 +10,8 @@
   <title>{% block title %}Flashcards{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'tachyons.min.css' %}"/>
   <link rel="stylesheet" href="{% static 'style.css' %}"/>
-  <style>
-    .answer {
-      display: none;
-    }
-
-    .answer:target {
-      display: block;
-    }
-  </style>
+  <script src="{% static 'flashcard.js' %}" defer></script>
+  {% block head %}{% endblock %}
 </head>
 <body class="sans-serif center mv2 mw8">
   <header class="mt4 pv2 ph4 bg-yellow flex items-center justify-between">

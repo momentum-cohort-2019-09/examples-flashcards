@@ -1,40 +1,47 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
   <h2>Quiz: {{ stack.name }}</h2>
-  <section>
-    <div class="pa3 ba br3 b--mid-gray">
-      <p>{{ card.prompt }}</p>
-      <p><a href="#answer-{{ card.pk }}">Click to show answer</a></p>
-      <div class="answer" id="answer-{{ card.pk }}">
-        <p>{{ card.answer }}</p>
-        <div class="flex">
-          <form class="mr4" action="{% url 'card-results' card_pk=card.pk %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="{{ form.correct.html_name }}" value="True">
-            <button class="f6 link dim br3 ph3 pv2 mb2 dib white bg-dark-green">I got it right</button>
-          </form>
-          
-          <form action="{% url 'card-results' card_pk=card.pk %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="{{ form.correct.html_name }}" value="False">
-            <button class="f6 link dim br3 ph3 pv2 mb2 dib white bg-dark-red">I got it wrong</button>
-          </form>
+  <section id="card" data-stack-pk="{{ stack.pk }}">
+    <div>
+      <div class="flip-container">
+        <div class="flipper">
+          <div class="front pa3 ba br3 b--mid-gray bg-white">
+            <p id="card-prompt"></p>
+            <button id="show-answer-link">Click to show answer</button>
+          </div>
+          <div class="back pa3 ba br3 b--mid-gray bg-white">
+            <div class="answer">
+              <p id="card-answer"></p>
+              <div class="flex">
+                <form class="mr4" action="{% url 'card-results' card_pk=card.pk %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="{{ form.correct.html_name }}" value="True">
+                  <button class="f6 link dim br3 ph3 pv2 mb2 dib white bg-dark-green">I got it right</button>
+                </form>
+                
+                <form action="{% url 'card-results' card_pk=card.pk %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="{{ form.correct.html_name }}" value="False">
+                  <button class="f6 link dim br3 ph3 pv2 mb2 dib white bg-dark-red">I got it wrong</button>
+                </form>
+              </div>
+            </div>      
+          </div>
         </div>
-      </div>
+      </div>      
     </div>    
     <p>
       {% if user.is_authenticated %}
-      Correct guesses: {{ times_correct }}<br>
-      Incorrect guesses: {{ times_incorrect }}<br>
+      Total guesses: {{ card.times_answered }}<br>
+      Correct guesses: {{ card.times_correct }}<br>
+      Incorrect guesses: {{ card.times_incorrect }}<br>
       {% endif %}
-      <!-- Last shown at: {% if last_shown_at %}{{ last_shown_at }}{% else %}Never{% endif %} -->
+      Last answered at: {% if last_answered_at_for_user %}{{ last_answered_at_for_user }}{% else %}Never{% endif %}
     </p>
     <h3>Previous attempts</h3>
-    <ul>
-      {% for answer_record in card.answer_records.all %}
-        <li>{{ answer_record.user }}: {{ answer_record.correct }} {{ answer_record.answered_at }}</li>
-      {% endfor %}
-    </ul>
+    <p><strong>Last answered at:</strong> {{ card.last_answered_at }}</p>
+    <p><strong>Total attempt count:</strong> {{ card.answer_count }}</p>
   </section>
 {% endblock %}

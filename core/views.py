@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.generic import DetailView, CreateView
+from django.db.models import Count, Min, Q
 
 
 class StackListView(View):
@@ -32,11 +33,14 @@ class StackListView(View):
 
     def render_template(self, request, form):
         if request.user.is_authenticated:
-            my_stacks = Stack.objects.filter(owner=request.user)
-            other_stacks = Stack.objects.exclude(owner=request.user)
+            my_stacks = Stack.objects.filter(owner=request.user).annotate(
+                card_count=Count('card__id'))
+            other_stacks = Stack.objects.exclude(owner=request.user).annotate(
+                card_count=Count('card__id'))
         else:
             my_stacks = []
-            other_stacks = Stack.objects.all()
+            other_stacks = Stack.objects.all().annotate(
+                card_count=Count('card__id'))
 
         return render(request, 'core/stack_list.html', {
             "my_stacks": my_stacks,
@@ -106,25 +110,18 @@ def stack_quiz(request, stack_pk):
     """
     stack = get_object_or_404(Stack, pk=stack_pk)
     form = CardResultsForm()
+    card = stack.random_card_for_user(request.user)
 
-    # TODO rewrite when we learn about aggregations
-    # card = None
-    # box_num = 0
-    # while card is None and box_num <= 3:
-    #     box_num += 1
-    #     card = stack.card_set.filter(
-    #         box_number=box_num).order_by('last_shown_at').first()
+    context = {"stack": stack, "card": card, "form": form}
 
-    card = stack.card_set.order_by('?').first()
+    if request.user.is_authenticated:
+        last_answer_for_user = card.answer_records.filter(
+            user=request.user).order_by("-answered_at").first()
+        if last_answer_for_user:
+            context[
+                'last_answered_at_for_user'] = last_answer_for_user.answered_at
 
-    return render(
-        request, 'core/stack_quiz.html', {
-            "stack": stack,
-            "card": card,
-            "form": form,
-            "times_correct": card.times_correct(request.user),
-            "times_incorrect": card.times_incorrect(request.user),
-        })
+    return render(request, 'core/stack_quiz.html', context)
 
 
 def card_results(request, card_pk):

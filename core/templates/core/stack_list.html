@@ -12,7 +12,7 @@
             {{ stack.name }}
           </a>
         </h2>
-        <div>{{ stack.card_set.count }} card{{ stack.card_set.count|pluralize }}</div>
+        <div>{{ stack.card_count }} card{{ stack.card_count|pluralize }}</div>
       </div>
     </div>
     {% empty %}
@@ -37,7 +37,7 @@
             {{ stack.name }}
           </a>
         </h2>
-        <div>{{ stack.card_set.count }} card{{ stack.card_set.count|pluralize }}</div>
+        <div>{{ stack.card_count }} card{{ stack.card_count|pluralize }}</div>
       </div>
     </div>
     {% endfor %}

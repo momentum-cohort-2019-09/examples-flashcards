@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 from core import views as core_views
+from core import json_views
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/stacks/')),
@@ -39,6 +40,9 @@ urlpatterns = [
          name='card-results'),
     path('admin/', admin.site.urls),
     path('accounts/', include('registration.backends.simple.urls')),
+    path('json/stacks/<int:stack_pk>/random-card/',
+         json_views.random_card,
+         name="json_random_card"),
 ]
 
 if settings.DEBUG:

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Min, Count, Q
 from django.contrib.auth.models import User
 
 ## Safer, but more complex method
@@ -11,9 +12,29 @@ from django.contrib.auth.models import User
 class Stack(models.Model):
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True)
+    subscribers = models.ManyToManyField(to=User,
+                                         related_name='subscribed_stacks')
 
     def __str__(self):
         return self.name
+
+    def random_card_for_user(self, user):
+        card_queryset = self.card_set.order_by('?').annotate(
+            last_answered_at=Min('answer_records__answered_at'),
+            answer_count=Count('answer_records__id'))
+
+        if user.is_authenticated:
+            card_queryset = card_queryset.annotate(
+                times_answered=Count('answer_records__id',
+                                     filter=Q(answer_records__user=user)),
+                times_correct=Count('answer_records__id',
+                                    filter=Q(answer_records__user=user,
+                                             answer_records__correct=True)),
+                times_incorrect=Count('answer_records__id',
+                                      filter=Q(answer_records__user=user,
+                                               answer_records__correct=False)))
+
+        return card_queryset.first()
 
 
 class Card(models.Model):
@@ -29,6 +50,9 @@ class Card(models.Model):
 
     def __str__(self):
         return self.prompt
+
+    def to_dict(self):
+        return {"pk": self.pk, "prompt": self.prompt, "answer": self.answer}
 
     def times_correct(self, user=None):
         if user is None:
@@ -64,4 +88,3 @@ class AnswerRecord(models.Model):
                              related_name='answer_records')
     correct = models.BooleanField()
     answered_at = models.DateTimeField(auto_now_add=True)
-
