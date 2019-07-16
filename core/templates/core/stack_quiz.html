@@ -34,14 +34,14 @@
     </div>    
     <p>
       {% if user.is_authenticated %}
-      Total guesses: {{ card.times_answered }}<br>
-      Correct guesses: {{ card.times_correct }}<br>
-      Incorrect guesses: {{ card.times_incorrect }}<br>
+      Total guesses: <span id="times-answered"></span><br>
+      Correct guesses: <span id="times-correct"></span><br>
+      Incorrect guesses: <span id="times-incorrect"></span><br>
       {% endif %}
-      Last answered at: {% if last_answered_at_for_user %}{{ last_answered_at_for_user }}{% else %}Never{% endif %}
+      <!-- Last answered at: {% if last_answered_at_for_user %}{{ last_answered_at_for_user }}{% else %}Never{% endif %} -->
     </p>
     <h3>Previous attempts</h3>
-    <p><strong>Last answered at:</strong> {{ card.last_answered_at }}</p>
-    <p><strong>Total attempt count:</strong> {{ card.answer_count }}</p>
+    <p><strong>Last answered at:</strong> <span id="last-answered-at"></span></p>
+    <p><strong>Total attempt count:</strong> <span id="answer-count"></span></p>
   </section>
 {% endblock %}

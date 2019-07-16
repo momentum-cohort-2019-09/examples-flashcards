@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Min, Count, Q
 from django.contrib.auth.models import User
+from random import randrange
 
 ## Safer, but more complex method
 # from django.contrib.auth import get_user_model
@@ -19,7 +20,7 @@ class Stack(models.Model):
         return self.name
 
     def random_card_for_user(self, user):
-        card_queryset = self.card_set.order_by('?').annotate(
+        card_queryset = self.card_set.annotate(
             last_answered_at=Min('answer_records__answered_at'),
             answer_count=Count('answer_records__id'))
 
@@ -33,8 +34,8 @@ class Stack(models.Model):
                 times_incorrect=Count('answer_records__id',
                                       filter=Q(answer_records__user=user,
                                                answer_records__correct=False)))
-
-        return card_queryset.first()
+        card_idx = randrange(0, card_queryset.count())
+        return card_queryset[card_idx]
 
 
 class Card(models.Model):

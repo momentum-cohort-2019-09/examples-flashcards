@@ -13,7 +13,18 @@ def random_card(request, stack_pk):
     stack = get_object_or_404(Stack, pk=stack_pk)
     card = stack.random_card_for_user(request.user)
 
-    return JsonResponse({"card": card.to_dict()})
+    return JsonResponse({
+        "card": {
+            "pk": card.pk,
+            "prompt": card.prompt,
+            "answer": card.answer,
+            "last_answered_at": card.last_answered_at,
+            "answer_count": card.answer_count,
+            "times_answered": card.times_answered,
+            "times_correct": card.times_correct,
+            "times_incorrect": card.times_incorrect,
+        }
+    })
 
 
 @require_http_methods(['POST'])

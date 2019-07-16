@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "dependencies": {
+    "browserify": "^16.3.0",
+    "jquery": "^3.4.1",
+    "js-cookie": "^2.2.0",
+    "watchify": "^3.11.1"
+  },
+  "scripts": {
+    "start": "watchify -v -o core/static/compiled.js core/static/flashcard.js",
+    "compile": "browserify -o core/static/compiled.js core/static/flashcard.js"
+  }
+}
