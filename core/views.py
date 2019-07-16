@@ -129,13 +129,11 @@ def card_results(request, card_pk):
     View to submit correct/incorrect results for a card.
     """
     card = get_object_or_404(Card, pk=card_pk)
-    if not request.user.is_authenticated:
-        return redirect(to='stack-quiz', stack_pk=card.stack.pk)
-
-    form = CardResultsForm(request.POST)
-    if form.is_valid():
-        correct = form.cleaned_data['correct']
-        card.record_result(correct, request.user)
-    else:
-        raise RuntimeError()
+    if request.user.is_authenticated:
+        form = CardResultsForm(request.POST)
+        if form.is_valid():
+            correct = form.cleaned_data['correct']
+            card.record_result(correct, request.user)
+        else:
+            raise RuntimeError()
     return redirect(to='stack-quiz', stack_pk=card.stack.pk)

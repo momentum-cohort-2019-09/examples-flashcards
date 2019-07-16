@@ -43,6 +43,9 @@ urlpatterns = [
     path('json/stacks/<int:stack_pk>/random-card/',
          json_views.random_card,
          name="json_random_card"),
+    path('json/card-results/<int:card_pk>/',
+         json_views.post_card_results,
+         name="json_post_card_results"),
 ]
 
 if settings.DEBUG:

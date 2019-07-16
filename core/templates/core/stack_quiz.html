@@ -15,13 +15,13 @@
             <div class="answer">
               <p id="card-answer"></p>
               <div class="flex">
-                <form class="mr4" action="{% url 'card-results' card_pk=card.pk %}" method="POST">
+                <form class="mr4 post-answer-form" data-correct="true" action="{% url 'card-results' card_pk=card.pk %}" method="POST">
                   {% csrf_token %}
                   <input type="hidden" name="{{ form.correct.html_name }}" value="True">
                   <button class="f6 link dim br3 ph3 pv2 mb2 dib white bg-dark-green">I got it right</button>
                 </form>
                 
-                <form action="{% url 'card-results' card_pk=card.pk %}" method="POST">
+                <form class="post-answer-form" data-correct="false" action="{% url 'card-results' card_pk=card.pk %}" method="POST">
                   {% csrf_token %}
                   <input type="hidden" name="{{ form.correct.html_name }}" value="False">
                   <button class="f6 link dim br3 ph3 pv2 mb2 dib white bg-dark-red">I got it wrong</button>
