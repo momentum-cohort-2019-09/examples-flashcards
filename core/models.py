@@ -72,10 +72,7 @@ class Card(models.Model):
     def record_result(self, correct, user):
         if user.is_authenticated:
             self.answer_records.create(correct=correct, user=user)
-        else:
-            self.answer_records.create(correct=correct)
-
-        self.save()
+            self.save()
         return self
 
 
