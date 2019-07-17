@@ -1,8 +1,8 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-/* globals fetch, Request */
+/* globals fetch */
 
-const Cookies = require('js-cookie')
 const $ = require('jquery')
+const requests = require('./requests')
 
 setupFlashcard()
 setupShowAnswerButton()
@@ -10,7 +10,7 @@ setupShowAnswerButton()
 function getRandomCard ($cardEl) {
   const stackPk = $cardEl.data('stack-pk')
   console.log('stackPk', stackPk)
-  const req = new Request(`/json/stacks/${stackPk}/random-card/`, { 'credentials': 'include' })
+  const req = requests.getRandomCard(stackPk)
   return fetch(req)
     .then(res => res.json())
     .then(function (data) {
@@ -37,17 +37,10 @@ function setupFlashcard () {
   for (let form of document.querySelectorAll('.post-answer-form')) {
     form.addEventListener('submit', function (event) {
       event.preventDefault()
-      const csrftoken = Cookies.get('csrftoken')
       const cardPk = $cardEl.data('card-pk')
       const answerIsCorrect = form.dataset.correct === 'true'
-      const req = new Request(`/json/card-results/${cardPk}/`, {
-        credentials: 'include',
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': csrftoken
-        },
-        body: JSON.stringify({ 'correct': answerIsCorrect })
-      })
+      const req = requests.postCardResults(cardPk, answerIsCorrect)
+
       fetch(req)
         .then(res => res.json())
         .then(function (data) {
@@ -70,7 +63,33 @@ function setupShowAnswerButton () {
   })
 }
 
-},{"jquery":2,"js-cookie":3}],2:[function(require,module,exports){
+},{"./requests":2,"jquery":3}],2:[function(require,module,exports){
+/* globals Request */
+
+const Cookies = require('js-cookie')
+
+function getRandomCard (stackPk) {
+  return new Request(`/json/stacks/${stackPk}/random-card/`, { 'credentials': 'include' })
+}
+
+function postCardResults (cardPk, correct) {
+  const csrftoken = Cookies.get('csrftoken')
+  return new Request(`/json/card-results/${cardPk}/`, {
+    credentials: 'include',
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrftoken
+    },
+    body: JSON.stringify({ 'correct': correct })
+  })
+}
+
+module.exports = {
+  'getRandomCard': getRandomCard,
+  'postCardResults': postCardResults
+}
+
+},{"js-cookie":4}],3:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.4.1
  * https://jquery.com/
@@ -10670,7 +10689,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /*!
  * JavaScript Cookie v2.2.0
  * https://github.com/js-cookie/js-cookie

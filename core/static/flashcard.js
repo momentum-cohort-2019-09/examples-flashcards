@@ -1,7 +1,7 @@
-/* globals fetch, Request */
+/* globals fetch */
 
-const Cookies = require('js-cookie')
 const $ = require('jquery')
+const requests = require('./requests')
 
 setupFlashcard()
 setupShowAnswerButton()
@@ -9,7 +9,7 @@ setupShowAnswerButton()
 function getRandomCard ($cardEl) {
   const stackPk = $cardEl.data('stack-pk')
   console.log('stackPk', stackPk)
-  const req = new Request(`/json/stacks/${stackPk}/random-card/`, { 'credentials': 'include' })
+  const req = requests.getRandomCard(stackPk)
   return fetch(req)
     .then(res => res.json())
     .then(function (data) {
@@ -36,17 +36,10 @@ function setupFlashcard () {
   for (let form of document.querySelectorAll('.post-answer-form')) {
     form.addEventListener('submit', function (event) {
       event.preventDefault()
-      const csrftoken = Cookies.get('csrftoken')
       const cardPk = $cardEl.data('card-pk')
       const answerIsCorrect = form.dataset.correct === 'true'
-      const req = new Request(`/json/card-results/${cardPk}/`, {
-        credentials: 'include',
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': csrftoken
-        },
-        body: JSON.stringify({ 'correct': answerIsCorrect })
-      })
+      const req = requests.postCardResults(cardPk, answerIsCorrect)
+
       fetch(req)
         .then(res => res.json())
         .then(function (data) {

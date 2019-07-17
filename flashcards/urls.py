@@ -39,7 +39,7 @@ urlpatterns = [
          core_views.card_results,
          name='card-results'),
     path('admin/', admin.site.urls),
-    path('accounts/', include('registration.backends.simple.urls')),
+    path('accounts/', include('registration.backends.default.urls')),
     path('json/stacks/<int:stack_pk>/random-card/',
          json_views.random_card,
          name="json_random_card"),

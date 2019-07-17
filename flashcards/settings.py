@@ -143,6 +143,10 @@ MESSAGE_TAGS = {
     message_constants.DEBUG: '',
 }
 
+# Email
+DEFAULT_FROM_EMAIL = 'webmaster@flashcards.org'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Configure Django App for Heroku.
 
 import django_heroku
