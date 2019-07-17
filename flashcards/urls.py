@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 from core import views as core_views
 from core import json_views
+from vocab import views as vocab_views
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/stacks/')),
@@ -46,6 +47,10 @@ urlpatterns = [
     path('json/card-results/<int:card_pk>/',
          json_views.post_card_results,
          name="json_post_card_results"),
+    path('vocab/', vocab_views.vocab_quiz, name="vocab-quiz"),
+    path('json/vocab/word/',
+         vocab_views.random_word_json,
+         name="json_random_word"),
 ]
 
 if settings.DEBUG:

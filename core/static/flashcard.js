@@ -4,6 +4,7 @@ const $ = require('jquery')
 const requests = require('./requests')
 
 setupFlashcard()
+setupVocabFlashcard()
 setupShowAnswerButton()
 
 function getRandomCard ($cardEl) {
@@ -44,6 +45,32 @@ function setupFlashcard () {
         })
         .then(() => $('.flip-container').toggleClass('flipped'))
         .then(() => getRandomCard($cardEl))
+    })
+  }
+}
+
+function getRandomVocabWord ($cardEl) {
+  return fetch(requests.getRandomVocab())
+    .then(res => res.json())
+    .then(function (data) {
+      $('#card-prompt').text(data.word)
+      $('#card-answer').html(`<ul>${data.definitions.map(d => `<li>${d}</li>`).join('')}</ul>`)
+    })
+}
+
+function setupVocabFlashcard () {
+  const $cardEl = $('#vocab-card')
+
+  if ($cardEl.length === 0) { return }
+
+  getRandomVocabWord($cardEl)
+
+  for (let form of document.querySelectorAll('.post-answer-form')) {
+    form.addEventListener('submit', function (event) {
+      event.preventDefault()
+      // const answerIsCorrect = form.dataset.correct === 'true'
+      $('.flip-container').toggleClass('flipped')
+      getRandomVocabWord($cardEl)
     })
   }
 }

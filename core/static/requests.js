@@ -6,6 +6,10 @@ function getRandomCard (stackPk) {
   return new Request(`/json/stacks/${stackPk}/random-card/`, { 'credentials': 'include' })
 }
 
+function getRandomVocab (stackPk) {
+  return new Request(`/json/vocab/word/`, { 'credentials': 'include' })
+}
+
 function postCardResults (cardPk, correct) {
   const csrftoken = Cookies.get('csrftoken')
   return new Request(`/json/card-results/${cardPk}/`, {
@@ -20,5 +24,6 @@ function postCardResults (cardPk, correct) {
 
 module.exports = {
   'getRandomCard': getRandomCard,
-  'postCardResults': postCardResults
+  'postCardResults': postCardResults,
+  'getRandomVocab': getRandomVocab
 }

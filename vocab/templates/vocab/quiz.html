@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>Vocab</h2>
+  <section id="vocab-card">
+    <div>
+      <div class="flip-container">
+        <div class="flipper">
+          <div class="front pa3 ba br3 b--mid-gray bg-white">
+            <p id="card-prompt"></p>
+            <button id="show-answer-link">Click to show answer</button>
+          </div>
+          <div class="back pa3 ba br3 b--mid-gray bg-white">
+            <div class="answer">
+              <div id="card-answer"></div>
+              <div class="flex">
+                <form class="mr4 post-answer-form" data-correct="true" action="" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="{{ form.correct.html_name }}" value="True">
+                  <button class="f6 link dim br3 ph3 pv2 mb2 dib white bg-dark-green">I got it right</button>
+                </form>
+                
+                <form class="post-answer-form" data-correct="false" action="" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="{{ form.correct.html_name }}" value="False">
+                  <button class="f6 link dim br3 ph3 pv2 mb2 dib white bg-dark-red">I got it wrong</button>
+                </form>
+              </div>
+            </div>      
+          </div>
+        </div>
+      </div>      
+    </div>        
+  </section>
+{% endblock %}

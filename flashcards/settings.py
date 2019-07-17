@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # My apps
     'core',
+    'vocab',
 ]
 
 MIDDLEWARE = [
