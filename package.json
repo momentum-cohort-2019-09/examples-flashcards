@@ -11,6 +11,7 @@
     "start": "npm-run-all -p -l django watch:js",
     "django": "python manage.py runserver",
     "watch:js": "watchify -v -o core/static/compiled.js core/static/flashcard.js",
-    "build:js": "browserify -o core/static/compiled.js core/static/flashcard.js"
+    "build:js": "browserify -o core/static/compiled.js core/static/flashcard.js",
+    "build": "browserify -o core/static/compiled.js core/static/flashcard.js"
   }
 }
