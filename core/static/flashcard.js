@@ -9,8 +9,7 @@ setupShowAnswerButton()
 function getRandomCard ($cardEl) {
   const stackPk = $cardEl.data('stack-pk')
   console.log('stackPk', stackPk)
-  const req = requests.getRandomCard(stackPk)
-  return fetch(req)
+  return fetch(requests.getRandomCard(stackPk))
     .then(res => res.json())
     .then(function (data) {
       const card = data.card
@@ -26,7 +25,6 @@ function getRandomCard ($cardEl) {
 }
 
 function setupFlashcard () {
-  // const cardEl = document.querySelector('#card')
   const $cardEl = $('#card')
 
   if ($cardEl.length === 0) { return }
@@ -38,9 +36,8 @@ function setupFlashcard () {
       event.preventDefault()
       const cardPk = $cardEl.data('card-pk')
       const answerIsCorrect = form.dataset.correct === 'true'
-      const req = requests.postCardResults(cardPk, answerIsCorrect)
 
-      fetch(req)
+      fetch(requests.postCardResults(cardPk, answerIsCorrect))
         .then(res => res.json())
         .then(function (data) {
           console.log('data', data)
