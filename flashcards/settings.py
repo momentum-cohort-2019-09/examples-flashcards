@@ -158,6 +158,8 @@ if SENDGRID_API_KEY:
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+WORDS_API_KEY = os.getenv('WORDS_API_KEY')
+
 # Configure Django App for Heroku.
 
 import django_heroku
