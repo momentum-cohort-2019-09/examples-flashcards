@@ -144,8 +144,18 @@ MESSAGE_TAGS = {
 }
 
 # Email
-DEFAULT_FROM_EMAIL = 'webmaster@flashcards.org'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'webmaster@flash-gordon-cards.herokuapp.com'
+
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+
+if SENDGRID_API_KEY:
+    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = 'apikey'
+    EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Configure Django App for Heroku.
 
