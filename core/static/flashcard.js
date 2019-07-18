@@ -9,7 +9,6 @@ setupShowAnswerButton()
 
 function getRandomCard ($cardEl) {
   const stackPk = $cardEl.data('stack-pk')
-  console.log('stackPk', stackPk)
   return fetch(requests.getRandomCard(stackPk))
     .then(res => res.json())
     .then(function (data) {
@@ -39,10 +38,6 @@ function setupFlashcard () {
       const answerIsCorrect = form.dataset.correct === 'true'
 
       fetch(requests.postCardResults(cardPk, answerIsCorrect))
-        .then(res => res.json())
-        .then(function (data) {
-          console.log('data', data)
-        })
         .then(() => $('.flip-container').toggleClass('flipped'))
         .then(() => getRandomCard($cardEl))
     })

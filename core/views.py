@@ -109,17 +109,8 @@ def stack_quiz(request, stack_pk):
     Show the user a random card from the chosen stack.
     """
     stack = get_object_or_404(Stack, pk=stack_pk)
-    form = CardResultsForm()
-    card = stack.random_card_for_user(request.user)
 
-    context = {"stack": stack, "card": card, "form": form}
-
-    if request.user.is_authenticated:
-        last_answer_for_user = card.answer_records.filter(
-            user=request.user).order_by("-answered_at").first()
-        if last_answer_for_user:
-            context[
-                'last_answered_at_for_user'] = last_answer_for_user.answered_at
+    context = {"stack": stack}
 
     return render(request, 'core/stack_quiz.html', context)
 
